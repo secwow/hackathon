@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="U8H-4u-SH9">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
@@ -512,7 +511,7 @@
                             <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="37h-bD-Iyn" userLabel="sessionInfoView">
                                 <rect key="frame" x="95.666666666666686" y="637.33333333333337" width="184" height="36.666666666666629"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="pkc-hu-yuO">
-                                    <rect key="frame" x="0.0" y="0.0" width="184" height="36.666666666666629"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="184" height="37"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing AR session." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hCE-IA-wLv" userLabel="sessionInfoLabel">
@@ -540,14 +539,14 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </visualEffectView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="2_GoldenPath" translatesAutoresizingMaskIntoConstraints="NO" id="EoP-jA-4Gs">
-                                <rect key="frame" x="8" y="592" width="359" height="220"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="2_GoldenPath" translatesAutoresizingMaskIntoConstraints="NO" id="EoP-jA-4Gs">
+                                <rect key="frame" x="8" y="558" width="359" height="220"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="220" id="ssw-Gh-tWT"/>
                                 </constraints>
                             </imageView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="efd-lc-Bpl">
-                                <rect key="frame" x="16" y="509" width="343" height="99"/>
+                                <rect key="frame" x="16" y="475" width="343" height="99"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="yur-39-7ug">
                                     <rect key="frame" x="0.0" y="0.0" width="343" height="99"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -606,8 +605,13 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="8"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.maskToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </visualEffectView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Up-hZ-n6E">
+                                <rect key="frame" x="11.666666666666657" y="778" width="351.66666666666674" height="34"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="71x-2l-AWw"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -620,16 +624,20 @@
                             <constraint firstItem="f6U-ce-g4P" firstAttribute="leading" secondItem="loo-cG-myf" secondAttribute="leading" constant="10" id="A9R-dP-GtN"/>
                             <constraint firstItem="Imx-hi-P5E" firstAttribute="leading" secondItem="71x-2l-AWw" secondAttribute="leading" constant="20" id="AQ0-TA-4U3"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="loo-cG-myf" secondAttribute="top" id="AWh-eG-2IT"/>
+                            <constraint firstItem="4Up-hZ-n6E" firstAttribute="top" secondItem="EoP-jA-4Gs" secondAttribute="bottom" id="Q5h-x0-PFe"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="71x-2l-AWw" secondAttribute="trailing" id="QcW-l6-86o"/>
                             <constraint firstItem="uZF-S8-SMn" firstAttribute="top" secondItem="71x-2l-AWw" secondAttribute="top" constant="10" id="TI1-eo-ZRN"/>
+                            <constraint firstItem="4Up-hZ-n6E" firstAttribute="centerX" secondItem="EoP-jA-4Gs" secondAttribute="centerX" id="Urp-wA-Eda"/>
                             <constraint firstItem="uZF-S8-SMn" firstAttribute="centerX" secondItem="loo-cG-myf" secondAttribute="centerX" id="Vpv-Bs-L7B"/>
                             <constraint firstItem="EoP-jA-4Gs" firstAttribute="top" secondItem="efd-lc-Bpl" secondAttribute="bottom" constant="-16" id="Wil-h4-njA"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="71x-2l-AWw" secondAttribute="leading" id="XTk-dV-9ao"/>
+                            <constraint firstItem="4Up-hZ-n6E" firstAttribute="width" secondItem="EoP-jA-4Gs" secondAttribute="width" multiplier="0.98" id="cdj-fz-xHU"/>
                             <constraint firstItem="nbt-AE-kdv" firstAttribute="centerY" secondItem="loo-cG-myf" secondAttribute="centerY" id="d0c-Lc-ZUt"/>
                             <constraint firstItem="71x-2l-AWw" firstAttribute="bottom" secondItem="wvR-s1-JPK" secondAttribute="bottom" constant="20" id="eMs-fn-8hr"/>
                             <constraint firstItem="37h-bD-Iyn" firstAttribute="centerX" secondItem="BrB-h1-WRS" secondAttribute="centerX" id="fYE-Zt-XZY"/>
                             <constraint firstItem="Imx-hi-P5E" firstAttribute="top" secondItem="71x-2l-AWw" secondAttribute="top" constant="10" id="gjD-jl-8Yx"/>
-                            <constraint firstAttribute="bottom" secondItem="EoP-jA-4Gs" secondAttribute="bottom" id="nMH-EV-TY5"/>
+                            <constraint firstItem="71x-2l-AWw" firstAttribute="bottom" secondItem="EoP-jA-4Gs" secondAttribute="bottom" id="nMH-EV-TY5"/>
+                            <constraint firstAttribute="bottom" secondItem="4Up-hZ-n6E" secondAttribute="bottom" id="sk2-Df-IRZ"/>
                             <constraint firstItem="wvR-s1-JPK" firstAttribute="centerX" secondItem="loo-cG-myf" secondAttribute="centerX" id="uTe-Wn-h3G"/>
                             <constraint firstAttribute="bottom" secondItem="BrB-h1-WRS" secondAttribute="bottom" id="vLe-CK-Oe7"/>
                             <constraint firstItem="71x-2l-AWw" firstAttribute="trailing" secondItem="efd-lc-Bpl" secondAttribute="trailing" constant="16" id="vdU-Z4-CDj"/>
