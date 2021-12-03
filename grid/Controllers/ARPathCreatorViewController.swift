@@ -131,7 +131,7 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
                 self.sceneView.scene.rootNode.addChildNode(lineNode!)
             } else {
                 let text = self.generateText("Exit T4")
-                text.position.x -= 0.25
+                text.position.x -= 0.35
                 node.addChildNode(text)
             }
             self.nodesStack.push((point: node, line: lineNode))
@@ -203,16 +203,15 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
             Mapping: \(frame.worldMappingStatus.description)
             Tracking: \(frame.camera.trackingState.description)
             """
-        for anchor in frame.anchors {
-            if (anchor.name == self.virtualObjectAnchorName) {
-                let distance = simd_distance(anchor.transform.columns.3, (sceneView.session.currentFrame?.camera.transform.columns.3)!);
-                let arNode = sceneView.node(for: anchor)
-                // display only disks that are within three meters of the viewer
-                if (distance < 3) {
-                    arNode?.isHidden = false
-                } else {
-                    arNode?.isHidden = true
-                }
+
+        nodesStack.elements.flatMap { [$0, $1] }.forEach { node in
+            guard let node = node else { return }
+            let distance = simd_distance(node.simdTransform.columns.3, (sceneView.session.currentFrame?.camera.transform.columns.3)!)
+
+            if (distance < 3) {
+                node.isHidden = false
+            } else {
+                node.isHidden = true
             }
         }
         updateSessionInfoLabel(for: frame, trackingState: frame.camera.trackingState)
@@ -587,4 +586,14 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
 
 protocol ARPathCreatorViewControllerDelegate {
     func completedARWorldMapCreation(worldMapData: ARWorldMap, startImage: Data, endImage: Data)
+}
+
+extension SCNNode {
+    func recursiveChilds() -> [SCNNode] {
+        if !childNodes.isEmpty {
+            return childNodes.flatMap { $0.recursiveChilds() }
+        } else {
+            return []
+        }
+    }
 }
