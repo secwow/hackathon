@@ -71,6 +71,7 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         sceneView.session.delegate = self
         sceneView.session.run(defaultConfiguration)
         sceneView.debugOptions = [ .showFeaturePoints ]
+        sceneView.autoenablesDefaultLighting = true
         
         // Prevent the screen from being dimmed after a while as users will likely
         // have long periods of interaction without touching the screen or buttons.
@@ -100,56 +101,19 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
 //        disk.firstMaterial?.shininess = 0.80
         return diskNode
     }
-    // This is not used currently because could not get the arrow to point exactly away from the phone.
-    // Leaving this here in case want to return this feature.
-    func generateArrowNode() -> SCNNode {
-        let vertcount = 48;
-        let verts: [Float] = [ -1.4923, 1.1824, 2.5000, -6.4923, 0.000, 0.000, -1.4923, -1.1824, 2.5000, 4.6077, -0.5812, 1.6800, 4.6077, -0.5812, -1.6800, 4.6077, 0.5812, -1.6800, 4.6077, 0.5812, 1.6800, -1.4923, -1.1824, -2.5000, -1.4923, 1.1824, -2.5000, -1.4923, 0.4974, -0.9969, -1.4923, 0.4974, 0.9969, -1.4923, -0.4974, 0.9969, -1.4923, -0.4974, -0.9969 ];
 
-        let facecount = 13;
-        let faces: [CInt] = [  3, 4, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 6, 7, 1, 8, 8, 1, 0, 2, 1, 7, 9, 8, 0, 10, 10, 0, 2, 11, 11, 2, 7, 12, 12, 7, 8, 9, 9, 5, 4, 12, 10, 6, 5, 9, 11, 3, 6, 10, 12, 4, 3, 11 ];
+    func generateText(_ text: String) -> SCNNode {
+        let text = SCNText(string: text, extrusionDepth: 2)
+        text.font = UIFont(name: "LyftProUI-Medium", size: 16)
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.white
 
-        let vertsData  = NSData(
-            bytes: verts,
-            length: MemoryLayout<Float>.size * vertcount
-        )
-
-        let vertexSource = SCNGeometrySource(data: vertsData as Data,
-                                             semantic: .vertex,
-                                             vectorCount: vertcount,
-                                             usesFloatComponents: true,
-                                             componentsPerVector: 3,
-                                             bytesPerComponent: MemoryLayout<Float>.size,
-                                             dataOffset: 0,
-                                             dataStride: MemoryLayout<Float>.size * 3)
-
-        let polyIndexCount = 61;
-        let indexPolyData  = NSData( bytes: faces, length: MemoryLayout<CInt>.size * polyIndexCount )
-
-        let element1 = SCNGeometryElement(data: indexPolyData as Data,
-                                          primitiveType: .polygon,
-                                          primitiveCount: facecount,
-                                          bytesPerIndex: MemoryLayout<CInt>.size)
-
-        let geometry1 = SCNGeometry(sources: [vertexSource], elements: [element1])
-
-        let material1 = geometry1.firstMaterial!
-
-        // grid color pallete dark blue
-        material1.diffuse.contents = UIColor(red: 0.08, green: 0.61, blue: 0.92, alpha: 1.00)
-        material1.lightingModel = .lambert
-        material1.transparency = 1.00
-        material1.transparencyMode = .dualLayer
-        material1.fresnelExponent = 1.00
-        material1.reflective.contents = UIColor(white:0.00, alpha:1.0)
-        material1.specular.contents = UIColor(white:0.00, alpha:1.0)
-        material1.shininess = 1.00
-
-        //Assign the SCNGeometry to a SCNNode, for example:
-        let aNode = SCNNode()
-        aNode.geometry = geometry1
-        aNode.scale = SCNVector3(0.021, 0.021, 0.021)
-        return aNode
+        text.materials = [material]
+        let node = SCNNode(geometry: text)
+        node.scale = SCNVector3(0.02, 0.02, 0.02)
+        node.position.y += 0.15
+        
+        return node
     }
 
     var nodesStack = Stack<(point: SCNNode, line: SCNNode?)>()
@@ -164,6 +128,8 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
             if let previousNode = self.nodesStack.top?.point {
                 lineNode = self.cylinderLine(from: previousNode.position, to: node.position)
                 self.sceneView.scene.rootNode.addChildNode(lineNode!)
+            } else {
+                node.addChildNode(self.generateText("Exit T4"))
             }
             self.nodesStack.push((point: node, line: lineNode))
         }
@@ -203,6 +169,8 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         lineNode.eulerAngles = SCNVector3(Float.pi/2,
                                           acos((to.z - from.z)/distance),
                                           atan2(to.y - from.y, to.x - from.x))
+
+        lineNode.scale.z = 0.0001
         
         lineNode.name = "Path"
 
@@ -333,6 +301,8 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.succesCheckmark.isHidden = true
         }
+
+        //add end text
     }
     
     /// - Tag: GetWorldMap
