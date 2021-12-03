@@ -56,6 +56,8 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
             self.saveButton.isHidden = true
             self.takeImageButton.isHidden = true
             self.takeDestinationImageButton.isHidden = true
+            makeTimer()
+
         } else {
             fakeImageStatus.isHidden = true
             navigationView.isHidden = true
@@ -76,7 +78,8 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
                 determine whether to show UI for launching AR experiences.
             """) // For details, see https://developer.apple.com/documentation/arkit
         }
-        
+
+
         // Start the view's AR session.
         sceneView.session.delegate = self
         sceneView.session.run(defaultConfiguration)
@@ -341,13 +344,16 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
     }
 
     var timer: Timer?
-    var metersCount = 65
+    var metersCount = 30
 
     private func makeTimer() {
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
             if metersCount > 1 {
-                metersCount -= 1
+                metersCount -= 2
+                metersLabel.text = "\(metersCount)"
 
+            } else {
+                timer.invalidate()
             }
         }
     }
