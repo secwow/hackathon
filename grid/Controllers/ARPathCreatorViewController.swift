@@ -31,9 +31,10 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
     var isLoadingData: Bool = true
     var startPointSnapshotAnchor: SnapshotAnchor?
     var destinationSnapshotAnchor: SnapshotAnchor?
-    
     var delegate: ARPathCreatorViewControllerDelegate?
     
+    @IBOutlet weak var fakeImageStatus: UIImageView!
+    @IBOutlet weak var navigationView: UIVisualEffectView!
     // MARK: - View Life Cycle
     
     // Lock the orientation of the app to the orientation in which it is launched
@@ -46,10 +47,16 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         succesCheckmark.isHidden = true
         
         if !isCreatingPath {
+            navigationView.isHidden = false
+
+            fakeImageStatus.isHidden = false
             self.loadExperience()
             self.saveButton.isHidden = true
             self.takeImageButton.isHidden = true
             self.takeDestinationImageButton.isHidden = true
+        } else {
+            fakeImageStatus.isHidden = true
+            navigationView.isHidden = true
         }
     }
     
@@ -189,20 +196,27 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
     /// - Tag: CheckMappingStatus
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         // Enable Save button only when the mapping status is good and an object has been placed
-        switch frame.worldMappingStatus {
-            case .extending, .mapped:
-                saveButton.isEnabled =
-                    virtualObjectAnchor != nil
-                        && frame.anchors.contains(virtualObjectAnchor!)
-                        && self.startPointSnapshotAnchor != nil
-                        && self.destinationSnapshotAnchor != nil
-            default:
-                saveButton.isEnabled = false
+        if isCreatingPath {
+            switch frame.worldMappingStatus {
+                case .extending, .mapped:
+                    saveButton.isEnabled =
+                        virtualObjectAnchor != nil
+                            && frame.anchors.contains(virtualObjectAnchor!)
+                            && self.startPointSnapshotAnchor != nil
+                            && self.destinationSnapshotAnchor != nil
+                default:
+                    saveButton.isEnabled = false
+            }
+            statusLabel.text = """
+                Mapping: \(frame.worldMappingStatus.description)
+                Tracking: \(frame.camera.trackingState.description)
+                """
+        } else {
+            saveButton.isHidden = true
+            undoButton.isHidden = true
+            takeImageButton.isHidden = true
+            takeDestinationImageButton
         }
-        statusLabel.text = """
-            Mapping: \(frame.worldMappingStatus.description)
-            Tracking: \(frame.camera.trackingState.description)
-            """
 
         nodesStack.elements.flatMap { [$0, $1] }.forEach { node in
             guard let node = node else { return }
