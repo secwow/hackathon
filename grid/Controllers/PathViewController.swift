@@ -6,8 +6,9 @@
 //
 
 import UIKit
-import Firebase
-import FirebaseStorage
+import ARKit
+//import Firebase
+//import FirebaseStorage
 
 class PathViewController: UIViewController {
 
@@ -25,6 +26,9 @@ class PathViewController: UIViewController {
     @IBOutlet weak var endLabelRef: UILabel!
     @IBOutlet weak var startImageActivityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var endImageActivityIndicator: UIActivityIndicatorView!
+    var startImage: UIImage!
+    var endImage: UIImage!
+    var worldData: ARWorldMap?
     
     var path: Path? = nil
     
@@ -63,59 +67,61 @@ class PathViewController: UIViewController {
     }
     
     func downloadStartImage() {
-        let storage = Storage.storage()
-        let storageRef = storage.reference(withPath: "pathStartImage/\(self.path?.pathId ?? "")")
-        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-        storageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
-          if let error = error {
-            print("Error downloading start image:", error)
-          } else {
-            self.startImageRef.image = UIImage(data: data!)
-            self.startImageRef.layer.cornerRadius = 16.0
-            self.startImageRef.layer.masksToBounds = true
-            self.startImageRef.clipsToBounds = true
-            self.startImageRef.layer.borderWidth = 4
-            self.startImageRef.layer.borderColor = UIColor.lightGray.cgColor
-            self.startImageActivityIndicator.isHidden = true
-            self.startImageActivityIndicator.stopAnimating()
-          }
-        }
+//        let storage = Storage.storage()
+//        let storageRef = storage.reference(withPath: "pathStartImage/\(self.path?.pathId ?? "")")
+//        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+//        storageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+//          if let error = error {
+//            print("Error downloading start image:", error)
+//          } else {
+//            self.startImageRef.image = UIImage(data: data!)
+//            self.startImageRef.layer.cornerRadius = 16.0
+//            self.startImageRef.layer.masksToBounds = true
+//            self.startImageRef.clipsToBounds = true
+//            self.startImageRef.layer.borderWidth = 4
+//            self.startImageRef.layer.borderColor = UIColor.lightGray.cgColor
+//            self.startImageActivityIndicator.isHidden = true
+//            self.startImageActivityIndicator.stopAnimating()
+//          }
+//        }
     }
     func downloadEndImage() {
-        let storage = Storage.storage()
-        let storageRef = storage.reference(withPath: "pathEndImage/\(self.path?.pathId ?? "")")
-        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
-        storageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
-          if let error = error {
-            print("Error downloading end image:", error)
-          } else {
-            self.endImageRef.image = UIImage(data: data!)
-            self.endImageRef.layer.cornerRadius = 16.0
-            self.endImageRef.layer.masksToBounds = true
-            self.endImageRef.clipsToBounds = true
-            self.endImageRef.layer.borderWidth = 4
-            self.endImageRef.layer.borderColor = UIColor.lightGray.cgColor
-            self.endImageActivityIndicator.isHidden = true
-            self.endImageActivityIndicator.stopAnimating()
-          }
-        }
+//        let storage = Storage.storage()
+//        let storageRef = storage.reference(withPath: "pathEndImage/\(self.path?.pathId ?? "")")
+//        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+//        storageRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+//          if let error = error {
+//            print("Error downloading end image:", error)
+//          } else {
+//            self.endImageRef.image = UIImage(data: data!)
+//            self.endImageRef.layer.cornerRadius = 16.0
+//            self.endImageRef.layer.masksToBounds = true
+//            self.endImageRef.clipsToBounds = true
+//            self.endImageRef.layer.borderWidth = 4
+//            self.endImageRef.layer.borderColor = UIColor.lightGray.cgColor
+//            self.endImageActivityIndicator.isHidden = true
+//            self.endImageActivityIndicator.stopAnimating()
+//          }
+//        }
         
     }
     func conditionallyDisplayEditButton() {
-        let currentUserId = Auth.auth().currentUser?.uid
-        if (currentUserId == path?.creatorId) {
-            print("current user is author")
-        } else {
-            self.editButton.isHidden = true;
-            self.deleteButton.isHidden = true;
-        }
+//        let currentUserId = Auth.auth().currentUser?.uid
+//        if (currentUserId == path?.creatorId) {
+//            print("current user is author")
+//        } else {
+//            self.editButton.isHidden = true;
+//            self.deleteButton.isHidden = true;
+//        }
     }
     
     @IBAction func onTouchEnterARPath(_ sender: Any) {
         print("touch enter ar path")
         let ARPathCreatorVC = self.storyboard?.instantiateViewController(withIdentifier: "ARPathCreatorVC") as! ARPathCreatorViewController
         ARPathCreatorVC.modalPresentationStyle = .fullScreen
-        ARPathCreatorVC.pathId = self.path?.pathId
+        ARPathCreatorVC.worldMap = Storage.worldData
+        ARPathCreatorVC.startPointSnapshotAnchor = Storage.startImage
+        ARPathCreatorVC.destinationSnapshotAnchor = Storage.endImage
         ARPathCreatorVC.isCreatingPath = false
         self.present(ARPathCreatorVC, animated: true, completion: nil)
     }
@@ -151,20 +157,20 @@ class PathViewController: UIViewController {
     }
     
     func deletePath() {
-        let db = Firestore.firestore()
-        guard ((self.path?.pathId) != nil) else { return }
-        db.collection("paths")
-            .whereField("pathId", isEqualTo: self.path?.pathId ?? "")
-            .getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting document prior to delete: \(err)")
-            } else {
-                for document in querySnapshot!.documents {
-                    document.reference.delete()
-                }
-            }
-            self.dismiss(animated: true, completion: nil)
-        }
+//        let db = Firestore.firestore()
+//        guard ((self.path?.pathId) != nil) else { return }
+//        db.collection("paths")
+//            .whereField("pathId", isEqualTo: self.path?.pathId ?? "")
+//            .getDocuments() { (querySnapshot, err) in
+//            if let err = err {
+//                print("Error getting document prior to delete: \(err)")
+//            } else {
+//                for document in querySnapshot!.documents {
+//                    document.reference.delete()
+//                }
+//            }
+//            self.dismiss(animated: true, completion: nil)
+//        }
     }
     
     @IBAction func onTouchBackButton(_ sender: Any) {

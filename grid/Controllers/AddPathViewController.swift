@@ -6,8 +6,9 @@
 //
 
 import UIKit
-import Firebase
-import FirebaseStorage
+import ARKit
+//import Firebase
+//import FirebaseStorage
 
 class AddPathViewController: UIViewController {
 
@@ -21,12 +22,12 @@ class AddPathViewController: UIViewController {
     var isEdit: Bool = false
     var path: Path? = nil
     var documentID: String? = nil
-    var db = Firestore.firestore()
+//    var db = Firestore.firestore()
     var pathId: String?
-    var worldMapData: Data?
+    var worldMapData: ARWorldMap?
     var downloadURL: String?
-    var startImageDownloadURL: String?
-    var endImageDownloadURL: String?
+//    var startImageDownloadURL: String?
+//    var endImageDownloadURL: String?
     var startImageData: Data?
     var endImageData: Data?
     var startImageFromView: UIImage?
@@ -63,7 +64,17 @@ class AddPathViewController: UIViewController {
             }
         }
     }
-    
+
+    @IBAction func enterAR(_ sender: Any) {
+        let ARPathCreatorVC = self.storyboard?.instantiateViewController(withIdentifier: "ARPathCreatorVC") as! ARPathCreatorViewController
+        ARPathCreatorVC.modalPresentationStyle = .fullScreen
+        ARPathCreatorVC.worldMap = Storage.worldData
+        ARPathCreatorVC.startPointSnapshotAnchor = Storage.startImage
+        ARPathCreatorVC.destinationSnapshotAnchor = Storage.endImage
+        ARPathCreatorVC.isCreatingPath = false
+        self.present(ARPathCreatorVC, animated: true, completion: nil)
+    }
+
     @IBAction func textFieldDoneEditing(sender: UITextField) {
         sender.resignFirstResponder()
     }
@@ -179,33 +190,46 @@ class AddPathViewController: UIViewController {
     }
     
     func savePath() {
-        let creatorEmail = Auth.auth().currentUser?.email
-        let creatorId = Auth.auth().currentUser?.uid
+//        let creatorEmail = Auth.auth().currentUser?.email
+//        let creatorId = Auth.auth().currentUser?.uid
         guard let name = nameTextField.text else {
             return
         }
         let description = descriptionTextField.text ?? ""
         
-        // Add a new document with a generated ID
-        var ref: DocumentReference? = nil
-        ref = self.db.collection("paths").addDocument(data: [
+//        // Add a new document with a generated ID
+//        var ref: DocumentReference? = nil
+//        ref = self.db.collection("paths").addDocument(data: [
+//            "name": name,
+//            "pathId": self.pathId!,
+//            "description": description,
+//            "creatorEmail": creatorEmail!,
+//            "creatorId": creatorId!,
+//            "geoSiteId": self.geoSiteId,
+//            "worldMapDownloadURL": self.downloadURL ?? "",
+//            "startImageDownloadURL": self.startImageDownloadURL ?? "",
+//            "endImageDownloadURL": self.endImageDownloadURL ?? ""
+//        ]) { err in
+//            if let err = err {
+//                print("Error adding document: \(err)")
+//            } else {
+//                print("Document added with ID: \(ref!.documentID)")
+//                self.documentID = ref!.documentID
+//            }
+//        }
+
+        Storage.paths[UUID()] = [
             "name": name,
             "pathId": self.pathId!,
             "description": description,
-            "creatorEmail": creatorEmail!,
-            "creatorId": creatorId!,
+            "creatorEmail": "dima@gmail.com",
+            "creatorId": "DIma",
             "geoSiteId": self.geoSiteId,
             "worldMapDownloadURL": self.downloadURL ?? "",
-            "startImageDownloadURL": self.startImageDownloadURL ?? "",
-            "endImageDownloadURL": self.endImageDownloadURL ?? ""
-        ]) { err in
-            if let err = err {
-                print("Error adding document: \(err)")
-            } else {
-                print("Document added with ID: \(ref!.documentID)")
-                self.documentID = ref!.documentID
-            }
-        }
+//            "startImageDownloadURL": self.startImageDownloadURL ?? "",
+//            "endImageDownloadURL": self.endImageDownloadURL ?? ""
+        ]
+
         
         activityIndicator.stopAnimating()
         UIApplication.shared.endIgnoringInteractionEvents()
@@ -214,119 +238,125 @@ class AddPathViewController: UIViewController {
     
     func uploadStartImage(completion: @escaping () -> Void) {
         
-        if (self.startImageData == nil) {
-            print("Start image was not updated")
-            completion()
-            return
-        }
-        
-        let storage = Storage.storage()
-
-        // Create a storage reference from our storage service
-        let storageRef = storage.reference()
-        let pathStartImageRef = storageRef.child("pathStartImage/\(self.pathId ?? "")")
-        guard (self.startImageData != nil) else { completion(); return }
+//        if (self.startImageData == nil) {
+//            print("Start image was not updated")
+//            completion()
+//            return
+//        }
+//        
+////        let storage = Storage.storage()
+//
+//        // Create a storage reference from our storage service
+//        let storageRef = storage.reference()
+//        let pathStartImageRef = storageRef.child("pathStartImage/\(self.pathId ?? "")")
+//        guard (self.startImageData != nil) else { completion(); return }
         
         // Upload the data to the path "worldMaps/pathId"
-        pathStartImageRef.putData(self.startImageData!, metadata: nil) { (metadata, error) in
-          guard let metadata = metadata else {
-            print("Eror uploading start image data, error:", error ?? " error not available")
-            completion()
-            return
-          }
-          let size = metadata.size
-          print("start imageupload size: ", size)
-            pathStartImageRef.downloadURL { (url, error) in
-            guard let startImageDownloadURL = url else {
-                print("downloadURL not available")
-                completion()
-              return
-            }
-            self.startImageDownloadURL = startImageDownloadURL.absoluteString
-            completion()
-          }
-        }
+        Storage.pathStartImage[self.pathId!] = self.startImageData!
+
+        // MARK: Под вопросом
+
+
+//        pathStartImageRef.putData(self.startImageData!, metadata: nil) { (metadata, error) in
+//          guard let metadata = metadata else {
+//            print("Eror uploading start image data, error:", error ?? " error not available")
+//            completion()
+//            return
+//          }
+//          let size = metadata.size
+//          print("start imageupload size: ", size)
+//            pathStartImageRef.downloadURL { (url, error) in
+//            guard let startImageDownloadURL = url else {
+//                print("downloadURL not available")
+//                completion()
+//              return
+//            }
+//            self.startImageDownloadURL = startImageDownloadURL.absoluteString
+//            completion()
+//          }
+//        }
     }
     
     func uploadEndImage(completion: @escaping () -> Void) {
         
-        if (self.endImageData == nil) {
-            print("End image was not updated")
-            completion()
-            return
-        }
-        
-        let storage = Storage.storage()
-
-        // Create a storage reference from our storage service
-        let storageRef = storage.reference()
-        let pathEndImageRef = storageRef.child("pathEndImage/\(self.pathId ?? "")")
-        
-        // Upload the data to the path "worldMaps/pathId"
-        // todo: fix edit bug when no ar change is made
-        pathEndImageRef.putData(self.endImageData!, metadata: nil) { (metadata, error) in
-          guard let metadata = metadata else {
-            print("Eror uploading end image data, error:", error ?? " error not available")
-            completion()
-            return
-          }
-          let size = metadata.size
-          print("end imageupload size: ", size)
-            pathEndImageRef.downloadURL { (url, error) in
-            guard let endImageDownloadURL = url else {
-                print("downloadURL not available")
-                completion()
-              return
-            }
-            print("upload complete!!! *** download URL is ", endImageDownloadURL)
-            self.endImageDownloadURL = endImageDownloadURL.absoluteString
-            completion()
-          }
-        }
+//        if (self.endImageData == nil) {
+//            print("End image was not updated")
+//            completion()
+//            return
+//        }
+//
+//        let storage = Storage.storage()
+//
+//        // Create a storage reference from our storage service
+//        let storageRef = storage.reference()
+//        let pathEndImageRef = storageRef.child("pathEndImage/\(self.pathId ?? "")")
+//
+//        // Upload the data to the path "worldMaps/pathId"
+//        // todo: fix edit bug when no ar change is made
+//        pathEndImageRef.putData(self.endImageData!, metadata: nil) { (metadata, error) in
+//          guard let metadata = metadata else {
+//            print("Eror uploading end image data, error:", error ?? " error not available")
+//            completion()
+//            return
+//          }
+//          let size = metadata.size
+//          print("end imageupload size: ", size)
+//            pathEndImageRef.downloadURL { (url, error) in
+//            guard let endImageDownloadURL = url else {
+//                print("downloadURL not available")
+//                completion()
+//              return
+//            }
+//            print("upload complete!!! *** download URL is ", endImageDownloadURL)
+//            self.endImageDownloadURL = endImageDownloadURL.absoluteString
+//            completion()
+//          }
+//        }
     }
     
     func updatePath() {
         
-        guard let name = nameTextField.text else {
-            return
-        }
-        let description = descriptionTextField.text ?? ""
-        
-        let pathRef = db.collection("paths").document(self.path!.documentID)
-        pathRef.updateData([
-            "name": name,
-            "description": description,
-            "worldMapDownloadURL": self.downloadURL ?? "",
-            "startImageDownloadURL": self.startImageDownloadURL ?? "",
-            "endImageDownloadURL": self.endImageDownloadURL ?? ""
-        ])
-        self.path?.name = name
-        self.path?.description = description
-        self.path?.worldMapDownloadURL = self.downloadURL ?? ""
-        
-        activityIndicator.stopAnimating()
-        UIApplication.shared.endIgnoringInteractionEvents()
-        delegate?.completedUpdate(path: self.path!)
+//        guard let name = nameTextField.text else {
+//            return
+//        }
+//        let description = descriptionTextField.text ?? ""
+//        
+//        let pathRef = db.collection("paths").document(self.path!.documentID)
+//        pathRef.updateData([
+//            "name": name,
+//            "description": description,
+//            "worldMapDownloadURL": self.downloadURL ?? "",
+////            "startImageDownloadURL": self.startImageDownloadURL ?? "",
+////            "endImageDownloadURL": self.endImageDownloadURL ?? ""
+//        ])
+//        self.path?.name = name
+//        self.path?.description = description
+//        self.path?.worldMapDownloadURL = self.downloadURL ?? ""
+//        
+//        activityIndicator.stopAnimating()
+//        UIApplication.shared.endIgnoringInteractionEvents()
+//        delegate?.completedUpdate(path: self.path!)
     }
     
     func updatePathWithOnlyNameAndDescription() {
         
-        guard let name = nameTextField.text else {
-            return
-        }
-        let description = descriptionTextField.text ?? ""
-        
-        let pathRef = db.collection("paths").document(self.path!.documentID)
-        pathRef.updateData([
-            "name": name,
-            "description": description,
-        ])
-        self.path?.name = name
-        self.path?.description = description
-        
-        activityIndicator.stopAnimating()
-        UIApplication.shared.endIgnoringInteractionEvents()
-        delegate?.completedUpdate(path: self.path!)
+//        guard let name = nameTextField.text else {
+//            return
+//        }
+//        let description = descriptionTextField.text ?? ""
+//
+//        let pathRef = db.collection("paths").document(self.path!.documentID)
+////        Storage.paths[self.path.]
+//        pathRef.updateData([
+//            "name": name,
+//            "description": description,
+//        ])
+//        self.path?.name = name
+//        self.path?.description = description
+//
+//        activityIndicator.stopAnimating()
+//        UIApplication.shared.endIgnoringInteractionEvents()
+//        delegate?.completedUpdate(path: self.path!)
     }
     
     func uploadMapData(completion: @escaping () -> Void) {
@@ -336,34 +366,38 @@ class AddPathViewController: UIViewController {
         }
         
         // Get a reference to the storage service using the default Firebase App
-        let storage = Storage.storage()
-
-        // Create a storage reference from our storage service
-        let storageRef = storage.reference()
-
-        let worldMapRef = storageRef.child("worldMaps/\(self.pathId ?? "")")
-
-        // Upload the data to the path "worldMaps/pathId"
-        worldMapRef.putData(self.worldMapData!, metadata: nil) { (metadata, error) in
-          guard let metadata = metadata else {
-            print("Eror uploading worldmap data, error:", error ?? " error not available")
-            completion()
+//        let storage = Storage.storage()
+//
+//        // Create a storage reference from our storage service
+//        let storageRef = storage.reference()
+//
+//        let worldMapRef = storageRef.child("worldMaps/\(self.pathId ?? "")")
+        guard let pathId = pathId else {
             return
-          }
-          // Metadata contains file metadata such as size, content-type.
-          let size = metadata.size
-          print("upload size: ", size)
-          // You can also access to download URL after upload.
-          worldMapRef.downloadURL { (url, error) in
-            guard let downloadURL = url else {
-                print("downloadURL not available")
-                completion()
-              return
-            }
-            self.downloadURL = downloadURL.absoluteString
-            completion()
-          }
         }
+
+//        Storage.worldMapData[pathId] = self.worldMapData!
+        // Upload the data to the path "worldMaps/pathId"
+//        worldMapRef.putData(self.worldMapData!, metadata: nil) { (metadata, error) in
+//          guard let metadata = metadata else {
+//            print("Eror uploading worldmap data, error:", error ?? " error not available")
+//            completion()
+//            return
+//          }
+//          // Metadata contains file metadata such as size, content-type.
+//          let size = metadata.size
+//          print("upload size: ", size)
+//          // You can also access to download URL after upload.
+//          worldMapRef.downloadURL { (url, error) in
+//            guard let downloadURL = url else {
+//                print("downloadURL not available")
+//                completion()
+//              return
+//            }
+//            self.downloadURL = downloadURL.absoluteString
+//            completion()
+//          }
+//        }
     }
     
     @IBAction func onCreateARPathPressed(_ sender: Any) {
@@ -381,7 +415,7 @@ protocol AddPathViewControllerDelegate {
 
 extension AddPathViewController: ARPathCreatorViewControllerDelegate {
     
-    func completedARWorldMapCreation(worldMapData: Data, startImage: Data, endImage: Data) {
+    func completedARWorldMapCreation(worldMapData: ARWorldMap, startImage: Data, endImage: Data) {
         self.worldMapData = worldMapData
         self.startImageRef.image = UIImage(data: startImage)
         self.startImageRef.layer.cornerRadius = 16.0

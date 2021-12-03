@@ -24,7 +24,8 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
     @IBOutlet weak var snapshotThumbnail: UIImageView!
     @IBOutlet weak var succesCheckmark: UIImageView!
     
-    var pathId: String?
+//    var pathId: String?
+    var worldMap: ARWorldMap?
     var isCreatingPath: Bool = true
     var isLoadingData: Bool = true
     var startPointSnapshotAnchor: SnapshotAnchor?
@@ -154,6 +155,10 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
     
     /// - Tag: RestoreVirtualContent
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+
+
+
+
         guard anchor.name == virtualObjectAnchorName
             else { return }
         
@@ -288,14 +293,17 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
                 else { self.showAlert(title: "Can't get current world map", message: error!.localizedDescription); return }
             
             // Add a snapshot image indicating where the map was captured.
-            map.anchors.append(self.startPointSnapshotAnchor!)
-            
+
+            let some = self.startPointSnapshotAnchor!
+
+            map.anchors.append(some)
+
             do {
-                let worldMapData = try NSKeyedArchiver.archivedData(
-                    withRootObject: map, requiringSecureCoding: true
-                )
+                Storage.endImage = self.destinationSnapshotAnchor
+                Storage.startImage = self.startPointSnapshotAnchor
+                Storage.worldData = map
                 self.delegate?.completedARWorldMapCreation(
-                    worldMapData: worldMapData,
+                    worldMapData: map,
                     startImage: self.startPointSnapshotAnchor!.imageData,
                     endImage: self.destinationSnapshotAnchor!.imageData
                 )
@@ -307,37 +315,41 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
     }
     
     func loadExperience() {
-        guard self.pathId != nil else {
+        guard let world = worldMap else {
             return
         }
-        let storage = Storage.storage()
-        let mapRefrence = storage.reference(withPath: "worldMaps/\(self.pathId ?? "")")
-        // 100 MB max
-        mapRefrence.getData(maxSize: 100 * 1024 * 1024) { data, error in
-            if let error = error {
-                print("Error while downloading map data: ", error)
-                fatalError("Error while downloading map data")
-            }
-            let worldMap: ARWorldMap = { () -> ARWorldMap in
-                do {
-                    guard let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data!)
-                        else { fatalError("No ARWorldMap in archive.") }
-                    
-                    return worldMap
-                } catch {
-                    fatalError("Can't unarchive ARWorldMap from file data: \(error)")
-                }
-            }()
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                // delay by 0.5 seconds for cases where user has a high speed internet connection
-                // the session update will have opportunity to run
-                self.setWorldMap(worldMap: worldMap)
-            }
+
+//        guard self.pathId != nil else {
+//            return
+//        }
+//        let storage = Storage.storage()
+//        let mapRefrence = storage.reference(withPath: "worldMaps/\(self.pathId ?? "")")
+//        // 100 MB max
+//        mapRefrence.getData(maxSize: 100 * 1024 * 1024) { data, error in
+//            if let error = error {
+//                print("Error while downloading map data: ", error)
+//                fatalError("Error while downloading map data")
+//            }
+//            let worldMap: ARWorldMap = { () -> ARWorldMap in
+//                do {
+//                    guard let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data!)
+//                        else { fatalError("No ARWorldMap in archive.") }
+//                    
+//                    return worldMap
+//                } catch {
+//                    fatalError("Can't unarchive ARWorldMap from file data: \(error)")
+//                }
+//            }()
+//
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.setWorldMap(worldMap: world)
         }
+
+//        }
     }
     
     func setWorldMap(worldMap: ARWorldMap) {
+        worldMap.anchors.append(startPointSnapshotAnchor!)
         // Display the snapshot image stored in the world map to aid user in relocalizing.
         if let snapshotData = worldMap.snapshotAnchor?.imageData,
             let snapshot = UIImage(data: snapshotData) {
@@ -371,7 +383,7 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
 
     var defaultConfiguration: ARWorldTrackingConfiguration {
         let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = .horizontal
+        configuration.planeDetection = [.horizontal, .vertical]
         configuration.environmentTexturing = .automatic
         if #available(iOS 13.0, *), ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth)  {
             configuration.frameSemantics.insert(.personSegmentationWithDepth)
@@ -460,5 +472,5 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
 }
 
 protocol ARPathCreatorViewControllerDelegate {
-    func completedARWorldMapCreation(worldMapData: Data, startImage: Data, endImage: Data)
+    func completedARWorldMapCreation(worldMapData: ARWorldMap, startImage: Data, endImage: Data)
 }

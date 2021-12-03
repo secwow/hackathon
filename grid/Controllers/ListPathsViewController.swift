@@ -118,51 +118,51 @@ class ListPathsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     @IBAction func deleteButtonTapped(_ sender: Any) {
-        for item in items {
-            let storage = Storage.storage()
-            let startImageRef = storage.reference(withPath: "pathStartImage/\(item.pathId )")
-            
-            startImageRef.delete() { error in
-                if let error = error {
-                    print("error deleting start image: ", error)
-                } else {
-                    print("Successfully deleted start image")
-                }
-            }
-            let endImageRef = storage.reference(withPath: "pathEndImage/\(item.pathId )")
-            
-            endImageRef.delete() { error in
-                if let error = error {
-                    print("error deleting end image: ", error)
-                } else {
-                    print("Successfully deleted end image")
-                }
-            }
-            let mapRefrence = storage.reference(withPath: "worldMaps/\(item.pathId)")
-            mapRefrence.delete() { error in
-                if let error = error {
-                    print("error deleting worldMap: ", error)
-                } else {
-                    print("Successfully deleted worldMap")
-                }
-            }
-        }
-        
-        db.collection("geosite")
-            .whereField("id", isEqualTo: self.geoSiteId)
-            .getDocuments() { (querySnapshot, error) in
-                if let error = error {
-                    print("Error occured while deleting geoSite: ", error)
-                } else if querySnapshot!.documents.count != 1 {
-                    print("error while deleting geosite: more than one document found with id: ", self.geoSiteId)
-                } else {
-                    let doc = querySnapshot!.documents.first
-                    doc!.reference.delete()
-                }
-            }
-        
-        delegate?.refreshSearch()
-        dismiss(animated: true, completion: nil)
+//        for item in items {
+//            let storage = Storage.storage()
+//            let startImageRef = storage.reference(withPath: "pathStartImage/\(item.pathId )")
+//            
+//            startImageRef.delete() { error in
+//                if let error = error {
+//                    print("error deleting start image: ", error)
+//                } else {
+//                    print("Successfully deleted start image")
+//                }
+//            }
+//            let endImageRef = storage.reference(withPath: "pathEndImage/\(item.pathId )")
+//            
+//            endImageRef.delete() { error in
+//                if let error = error {
+//                    print("error deleting end image: ", error)
+//                } else {
+//                    print("Successfully deleted end image")
+//                }
+//            }
+//            let mapRefrence = storage.reference(withPath: "worldMaps/\(item.pathId)")
+//            mapRefrence.delete() { error in
+//                if let error = error {
+//                    print("error deleting worldMap: ", error)
+//                } else {
+//                    print("Successfully deleted worldMap")
+//                }
+//            }
+//        }
+//        
+//        db.collection("geosite")
+//            .whereField("id", isEqualTo: self.geoSiteId)
+//            .getDocuments() { (querySnapshot, error) in
+//                if let error = error {
+//                    print("Error occured while deleting geoSite: ", error)
+//                } else if querySnapshot!.documents.count != 1 {
+//                    print("error while deleting geosite: more than one document found with id: ", self.geoSiteId)
+//                } else {
+//                    let doc = querySnapshot!.documents.first
+//                    doc!.reference.delete()
+//                }
+//            }
+//        
+//        delegate?.refreshSearch()
+//        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func onGoBack(_ sender: Any) {
