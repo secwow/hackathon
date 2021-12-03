@@ -423,6 +423,7 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.environmentTexturing = .automatic
+        configuration.sceneReconstruction = .meshWithClassification
         if #available(iOS 13.0, *), ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth)  {
             configuration.frameSemantics.insert(.personSegmentationWithDepth)
 //            configuration.frameSemantics.insert(.sceneDepth)
@@ -507,6 +508,81 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
 
     var virtualObjectAnchor: ARAnchor?
     let virtualObjectAnchorName = "virtualObject"
+
+
+
+    // MARK: Walls detection
+    
+
+    func occlusion() -> SCNMaterial {
+
+        let occlusionMaterial = SCNMaterial()
+        occlusionMaterial.isDoubleSided = true
+        occlusionMaterial.colorBufferWriteMask = []
+        occlusionMaterial.readsFromDepthBuffer = true
+        occlusionMaterial.writesToDepthBuffer = true
+
+        return occlusionMaterial
+    }
+
+    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+        guard let meshAnchor = anchor as? ARMeshAnchor else {
+            return SCNNode()
+        }
+
+        let geometry = SCNGeometry(arGeometry: meshAnchor.geometry)
+
+        let classification = meshAnchor.geometry.classificationOf(faceWithIndex: 0)
+        switch classification {
+        case .wall:
+            break
+        case .door:
+            break
+        default:
+            return nil
+        }
+
+        let defaultMaterial = SCNMaterial()
+        defaultMaterial.fillMode = .lines
+        defaultMaterial.diffuse.contents = UIColor.red
+        geometry.firstMaterial = occlusion()
+        let node = SCNNode()
+        node.geometry = geometry
+        node.renderingOrder = -100
+        node.categoryBitMask = 0b0001
+        return node
+    }
+
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        guard let meshAnchor = anchor as? ARMeshAnchor else {
+            return
+        }
+
+        let classification = meshAnchor.geometry.classificationOf(faceWithIndex: 0)
+
+
+        switch classification {
+        case .wall:
+            break
+        case .door:
+            break
+        case .window:
+            break
+        case .ceiling:
+            break
+        default:
+            return
+        }
+
+        let newGeometry = SCNGeometry(arGeometry: meshAnchor.geometry)
+
+        let defaultMaterial = SCNMaterial()
+        defaultMaterial.fillMode = .lines
+        defaultMaterial.diffuse.contents = UIColor.red
+        newGeometry.firstMaterial = occlusion()
+        node.geometry = newGeometry
+    }
+
 }
 
 protocol ARPathCreatorViewControllerDelegate {

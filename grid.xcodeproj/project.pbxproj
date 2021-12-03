@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0A72B74A65A8080A5FE019D6 /* Pods_grid_gridUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D3B25599D134175B1B8E76F /* Pods_grid_gridUITests.framework */; };
 		2211C2DA2759035A0053B170 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2211C2D92759035A0053B170 /* Storage.swift */; };
+		2211C2E0275A4BAE0053B170 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2211C2DF275A4BAE0053B170 /* Stack.swift */; };
+		2211C2E2275A4C400053B170 /* ARPath+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2211C2E1275A4C400053B170 /* ARPath+Utilities.swift */; };
 		36C9202543779D3AC06955FC /* Pods_gridTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C51529EC6EBB034E688B418 /* Pods_gridTests.framework */; };
 		64A930B1EA271C920CABDE66 /* Pods_grid.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9440EBD9EC862521CCE4C011 /* Pods_grid.framework */; };
 		FA0032AA25E2D33D00C99247 /* GeoSiteAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0032A925E2D33D00C99247 /* GeoSiteAnnotation.swift */; };
@@ -61,6 +63,8 @@
 		0F27418C98595B82AAEEB50D /* Pods-gridTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gridTests.debug.xcconfig"; path = "Target Support Files/Pods-gridTests/Pods-gridTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2036A7C8696F0EB95449F498 /* Pods-grid.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-grid.release.xcconfig"; path = "Target Support Files/Pods-grid/Pods-grid.release.xcconfig"; sourceTree = "<group>"; };
 		2211C2D92759035A0053B170 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		2211C2DF275A4BAE0053B170 /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
+		2211C2E1275A4C400053B170 /* ARPath+Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARPath+Utilities.swift"; sourceTree = "<group>"; };
 		2D3B25599D134175B1B8E76F /* Pods_grid_gridUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_grid_gridUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34DCA519BDCAB0ECEB8CBE96 /* Pods-grid-gridUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-grid-gridUITests.release.xcconfig"; path = "Target Support Files/Pods-grid-gridUITests/Pods-grid-gridUITests.release.xcconfig"; sourceTree = "<group>"; };
 		6C51529EC6EBB034E688B418 /* Pods_gridTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_gridTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -185,6 +189,7 @@
 		FA10ECF225BD212700161290 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				2211C2DF275A4BAE0053B170 /* Stack.swift */,
 				FA10ECF625BD214200161290 /* User.swift */,
 				FA97062A25CF9440008DBC72 /* GeoSite.swift */,
 				FA0032D025E3387A00C99247 /* Path.swift */,
@@ -213,6 +218,7 @@
 			children = (
 				FA2EBEEE25BD113E006EF41C /* Utilities.swift */,
 				FABB115F25AAC62F0087C794 /* ARUtilities.swift */,
+				2211C2E1275A4C400053B170 /* ARPath+Utilities.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -530,12 +536,14 @@
 				FA2EBEEF25BD113E006EF41C /* Utilities.swift in Sources */,
 				2211C2DA2759035A0053B170 /* Storage.swift in Sources */,
 				FABB116025AAC62F0087C794 /* SnapshotAnchor.swift in Sources */,
+				2211C2E2275A4C400053B170 /* ARPath+Utilities.swift in Sources */,
 				FA10ECEE25BD1A8200161290 /* LoginViewController.swift in Sources */,
 				FA97062625CF7BF3008DBC72 /* AddGeoSiteViewController.swift in Sources */,
 				FA10ECF725BD214200161290 /* User.swift in Sources */,
 				FA15831A25EAC66E0086E3A6 /* PathViewController.swift in Sources */,
 				FA0032B425E3010600C99247 /* ListPathsViewController.swift in Sources */,
 				FAF80BCA25A170480098463A /* AppDelegate.swift in Sources */,
+				2211C2E0275A4BAE0053B170 /* Stack.swift in Sources */,
 				FA39B3C326192D530037AF85 /* EditGeoSiteViewController.swift in Sources */,
 				FABB116225AAC62F0087C794 /* ARUtilities.swift in Sources */,
 				FABB116125AAC62F0087C794 /* RoundedButton.swift in Sources */,
@@ -713,7 +721,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SC53QUU5F2;
 				INFOPLIST_FILE = grid/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -736,7 +744,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SC53QUU5F2;
 				INFOPLIST_FILE = grid/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
