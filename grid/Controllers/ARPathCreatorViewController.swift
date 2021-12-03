@@ -14,6 +14,8 @@ import simd
 class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     // MARK: - IBOutlets
     
+    @IBOutlet weak var statusView: UIView!
+    @IBOutlet weak var hideButton: UIButton!
     @IBOutlet weak var sessionInfoView: UIView!
     @IBOutlet weak var sessionInfoLabel: UILabel!
     @IBOutlet weak var sceneView: ARSCNView!
@@ -365,6 +367,10 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         }
     }
     
+    @IBAction func onHidePress(_ sender: UIButton) {
+        isCreatingPath = false
+    }
+
     func loadExperience() {
         guard let world = worldMap else {
             return
@@ -437,12 +443,8 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.environmentTexturing = .automatic
         configuration.sceneReconstruction = .meshWithClassification
-        if #available(iOS 13.0, *), ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth)  {
-            configuration.frameSemantics.insert(.personSegmentationWithDepth)
-//            configuration.frameSemantics.insert(.sceneDepth)
-        } else {
-            print("people occlusion is not supported")
-        }
+        configuration.frameSemantics.insert(.personSegmentationWithDepth)
+
         return configuration
     }
     

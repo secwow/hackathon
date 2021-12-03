@@ -415,10 +415,18 @@
                                 <rect key="frame" x="54" y="684" width="267" height="74"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="NnE-DW-uWg">
-                                        <rect key="frame" x="53" y="0.0" width="161" height="34"/>
+                                        <rect key="frame" x="15.666666666666686" y="0.0" width="236" height="34"/>
                                         <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bQg-cB-MOD" userLabel="hide">
+                                                <rect key="frame" x="0.0" y="0.0" width="67" height="34"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="Button"/>
+                                                <connections>
+                                                    <action selector="onHidePress:" destination="7dh-A0-qGE" eventType="touchUpInside" id="vhD-1U-PwF"/>
+                                                </connections>
+                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9vM-G1-3bk" userLabel="savePathButton" customClass="RoundedButton" customModule="grid" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="94" height="34"/>
+                                                <rect key="frame" x="74.999999999999986" y="0.0" width="94.000000000000014" height="34"/>
                                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="94" id="EtZ-cz-aUW"/>
@@ -434,7 +442,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kCj-Cx-Qs9" customClass="RoundedButton" customModule="grid" customModuleProvider="target">
-                                                <rect key="frame" x="102" y="0.0" width="59" height="34"/>
+                                                <rect key="frame" x="177" y="0.0" width="59" height="34"/>
                                                 <color key="backgroundColor" name="AccentColor"/>
                                                 <buttonConfiguration key="configuration" style="plain" title="Undo">
                                                     <color key="baseForegroundColor" systemColor="systemBackgroundColor"/>
@@ -546,9 +554,9 @@
                                 </constraints>
                             </imageView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="efd-lc-Bpl">
-                                <rect key="frame" x="16" y="475" width="343" height="99"/>
+                                <rect key="frame" x="16" y="473" width="343" height="103"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="yur-39-7ug">
-                                    <rect key="frame" x="0.0" y="0.0" width="343" height="99"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="343" height="103"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ArrowUp_XL" translatesAutoresizingMaskIntoConstraints="NO" id="ftM-nJ-0pt">
@@ -598,19 +606,19 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="99" id="366-wj-g80"/>
+                                    <constraint firstAttribute="height" constant="103" id="366-wj-g80"/>
                                 </constraints>
                                 <blurEffect style="extraLight"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="8"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.maskToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </visualEffectView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Up-hZ-n6E">
-                                <rect key="frame" x="11.666666666666657" y="778" width="351.66666666666674" height="34"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <rect key="frame" x="15.333333333333343" y="778" width="344.33333333333326" height="34"/>
+                                <color key="backgroundColor" red="1" green="0.99997597930000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="71x-2l-AWw"/>
@@ -629,9 +637,9 @@
                             <constraint firstItem="uZF-S8-SMn" firstAttribute="top" secondItem="71x-2l-AWw" secondAttribute="top" constant="10" id="TI1-eo-ZRN"/>
                             <constraint firstItem="4Up-hZ-n6E" firstAttribute="centerX" secondItem="EoP-jA-4Gs" secondAttribute="centerX" id="Urp-wA-Eda"/>
                             <constraint firstItem="uZF-S8-SMn" firstAttribute="centerX" secondItem="loo-cG-myf" secondAttribute="centerX" id="Vpv-Bs-L7B"/>
-                            <constraint firstItem="EoP-jA-4Gs" firstAttribute="top" secondItem="efd-lc-Bpl" secondAttribute="bottom" constant="-16" id="Wil-h4-njA"/>
+                            <constraint firstItem="EoP-jA-4Gs" firstAttribute="top" secondItem="efd-lc-Bpl" secondAttribute="bottom" constant="-18" id="Wil-h4-njA"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="71x-2l-AWw" secondAttribute="leading" id="XTk-dV-9ao"/>
-                            <constraint firstItem="4Up-hZ-n6E" firstAttribute="width" secondItem="EoP-jA-4Gs" secondAttribute="width" multiplier="0.98" id="cdj-fz-xHU"/>
+                            <constraint firstItem="4Up-hZ-n6E" firstAttribute="width" secondItem="EoP-jA-4Gs" secondAttribute="width" multiplier="0.96" id="cdj-fz-xHU"/>
                             <constraint firstItem="nbt-AE-kdv" firstAttribute="centerY" secondItem="loo-cG-myf" secondAttribute="centerY" id="d0c-Lc-ZUt"/>
                             <constraint firstItem="71x-2l-AWw" firstAttribute="bottom" secondItem="wvR-s1-JPK" secondAttribute="bottom" constant="20" id="eMs-fn-8hr"/>
                             <constraint firstItem="37h-bD-Iyn" firstAttribute="centerX" secondItem="BrB-h1-WRS" secondAttribute="centerX" id="fYE-Zt-XZY"/>
@@ -646,6 +654,7 @@
                     </view>
                     <connections>
                         <outlet property="fakeImageStatus" destination="EoP-jA-4Gs" id="OJF-Id-jmN"/>
+                        <outlet property="hideButton" destination="bQg-cB-MOD" id="cRJ-hK-3hN"/>
                         <outlet property="navigationView" destination="efd-lc-Bpl" id="3s5-EU-hRJ"/>
                         <outlet property="saveButton" destination="9vM-G1-3bk" id="kiy-Kc-bba"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="sgr-g8-kdG"/>
@@ -653,6 +662,7 @@
                         <outlet property="sessionInfoView" destination="37h-bD-Iyn" id="e6g-gN-reW"/>
                         <outlet property="snapshotThumbnail" destination="f6U-ce-g4P" id="we1-gb-AkX"/>
                         <outlet property="statusLabel" destination="aD6-EU-VHg" id="XNR-tR-am9"/>
+                        <outlet property="statusView" destination="uqy-xA-7xQ" id="V3E-8t-RE9"/>
                         <outlet property="succesCheckmark" destination="nbt-AE-kdv" id="Syd-sJ-2KK"/>
                         <outlet property="takeDestinationImageButton" destination="uaL-8Y-8j1" id="4Bn-II-7wu"/>
                         <outlet property="takeImageButton" destination="eF0-Sy-Tkc" id="N7S-cf-oAc"/>
