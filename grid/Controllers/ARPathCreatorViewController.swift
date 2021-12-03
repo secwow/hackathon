@@ -18,6 +18,7 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
     @IBOutlet weak var sessionInfoLabel: UILabel!
     @IBOutlet weak var sceneView: ARSCNView!
     @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var undoButton: UIButton!
     @IBOutlet weak var takeImageButton: RoundedButton!
     @IBOutlet weak var takeDestinationImageButton: RoundedButton!
     @IBOutlet weak var statusLabel: UILabel!
@@ -102,16 +103,16 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         return diskNode
     }
 
-    func generateText(_ text: String) -> SCNNode {
+    func generateText(_ text: String, font: UIFont? = UIFont(name: "LyftProUI-Medium", size: 16)) -> SCNNode {
         let text = SCNText(string: text, extrusionDepth: 2)
-        text.font = UIFont(name: "LyftProUI-Medium", size: 16)
+        text.font = font
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.white
 
         text.materials = [material]
         let node = SCNNode(geometry: text)
-        node.scale = SCNVector3(0.02, 0.02, 0.02)
-        node.position.y += 0.15
+        node.scale = SCNVector3(0.015, 0.015, 0.015)
+        node.eulerAngles.x = -Float.pi / 4
         
         return node
     }
@@ -129,7 +130,9 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
                 lineNode = self.cylinderLine(from: previousNode.position, to: node.position)
                 self.sceneView.scene.rootNode.addChildNode(lineNode!)
             } else {
-                node.addChildNode(self.generateText("Exit T4"))
+                let text = self.generateText("Exit T4")
+                text.position.x -= 0.25
+                node.addChildNode(text)
             }
             self.nodesStack.push((point: node, line: lineNode))
         }
@@ -293,7 +296,26 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
             self.succesCheckmark.isHidden = true
         }
     }
-    @IBAction func onDestinationImagePress(_ sender: Any) {
+
+    @IBAction func onDestinationImagePress(_ sender: UIButton) {
+        guard let lastNode = nodesStack.top?.point else { return }
+
+        let whiteDisk = generateFlatDisk()
+        whiteDisk.scale = SCNVector3(x: 250, y: 1, z: 250)
+        whiteDisk.geometry?.materials.first?.diffuse.contents = UIColor.white
+        whiteDisk.position.y += 0.0001
+
+        let disk = generateFlatDisk()
+        disk.scale = SCNVector3(x: 200, y: 1, z: 200)
+        disk.position.y += 0.0002
+
+        let finishText = generateText("Lyft", font: UIFont(name: "LyftProUI-Bolditalic", size: 16)!)
+        finishText.position.x = -0.17
+
+        lastNode.addChildNode(finishText)
+        lastNode.addChildNode(whiteDisk)
+        lastNode.addChildNode(disk)
+
         guard let snapshotAnchor = SnapshotAnchor(capturing: self.sceneView)
             else { fatalError("Can't take snapshot") }
         self.destinationSnapshotAnchor = snapshotAnchor
@@ -301,8 +323,6 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.succesCheckmark.isHidden = true
         }
-
-        //add end text
     }
     
     /// - Tag: GetWorldMap

@@ -479,7 +479,7 @@
                                                     <imageReference key="image" image="camera" catalog="system" symbolScale="medium"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="onDestinationImagePress:" destination="7dh-A0-qGE" eventType="touchUpInside" id="5Db-sI-4H5"/>
+                                                    <action selector="onDestinationImagePress:" destination="7dh-A0-qGE" eventType="touchUpInside" id="vvJ-2x-buu"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -509,7 +509,7 @@
                                 </userDefinedRuntimeAttributes>
                             </imageView>
                             <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="37h-bD-Iyn" userLabel="sessionInfoView">
-                                <rect key="frame" x="95.666666666666686" y="637.66666666666663" width="184" height="36.333333333333371"/>
+                                <rect key="frame" x="95.666666666666686" y="638" width="184" height="36"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="pkc-hu-yuO">
                                     <rect key="frame" x="0.0" y="0.0" width="184" height="36"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -571,6 +571,7 @@
                         <outlet property="succesCheckmark" destination="nbt-AE-kdv" id="Syd-sJ-2KK"/>
                         <outlet property="takeDestinationImageButton" destination="uaL-8Y-8j1" id="4Bn-II-7wu"/>
                         <outlet property="takeImageButton" destination="eF0-Sy-Tkc" id="N7S-cf-oAc"/>
+                        <outlet property="undoButton" destination="kCj-Cx-Qs9" id="3nn-ML-f8L"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hvH-ud-t1P" userLabel="First Responder" sceneMemberID="firstResponder"/>
