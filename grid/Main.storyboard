@@ -517,9 +517,9 @@
                                 </userDefinedRuntimeAttributes>
                             </imageView>
                             <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="37h-bD-Iyn" userLabel="sessionInfoView">
-                                <rect key="frame" x="95.666666666666686" y="637.33333333333337" width="184" height="36.666666666666629"/>
+                                <rect key="frame" x="95.666666666666686" y="638" width="184" height="36"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="pkc-hu-yuO">
-                                    <rect key="frame" x="0.0" y="0.0" width="184" height="37"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="184" height="36"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing AR session." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hCE-IA-wLv" userLabel="sessionInfoLabel">
@@ -655,6 +655,7 @@
                     <connections>
                         <outlet property="fakeImageStatus" destination="EoP-jA-4Gs" id="OJF-Id-jmN"/>
                         <outlet property="hideButton" destination="bQg-cB-MOD" id="cRJ-hK-3hN"/>
+                        <outlet property="metersLabel" destination="Ft7-Ho-WBO" id="wV6-jA-dlq"/>
                         <outlet property="navigationView" destination="efd-lc-Bpl" id="3s5-EU-hRJ"/>
                         <outlet property="saveButton" destination="9vM-G1-3bk" id="kiy-Kc-bba"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="sgr-g8-kdG"/>

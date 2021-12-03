@@ -26,8 +26,8 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var snapshotThumbnail: UIImageView!
     @IBOutlet weak var succesCheckmark: UIImageView!
-    
-//    var pathId: String?
+    @IBOutlet weak var metersLabel: UILabel!
+    //    var pathId: String?
     var worldMap: ARWorldMap?
     var isCreatingPath: Bool = true
     var isLoadingData: Bool = true
@@ -339,6 +339,23 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
             self.succesCheckmark.isHidden = true
         }
     }
+
+    var timer: Timer?
+    var metersCount = 65
+
+    private func makeTimer() {
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
+            if metersCount > 1 {
+                metersCount -= 1
+
+            }
+        }
+    }
+
+    @objc func timerUpdate() {
+//        if mete
+    }
+
     
     /// - Tag: GetWorldMap
     @IBAction func saveExperience(_ button: UIButton) {
