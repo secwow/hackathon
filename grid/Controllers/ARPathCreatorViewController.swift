@@ -87,18 +87,17 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
     // MARK: - ARSCNViewDelegate
     
     func generateFlatDisk() -> SCNNode {
-        let disk = SCNCylinder(radius: 0.05, height: 0.001);
+        let disk = SCNCylinder(radius: 0.001, height: 0.001);
         let diskNode = SCNNode()
-        diskNode.position.y += Float(disk.radius)
         diskNode.geometry = disk
-        disk.firstMaterial?.diffuse.contents = UIColor(red: 0.08, green: 0.61, blue: 0.92, alpha: 1.00)
-        disk.firstMaterial?.lightingModel = .lambert
-        disk.firstMaterial?.transparency = 0.80
-        disk.firstMaterial?.transparencyMode = .dualLayer
-        disk.firstMaterial?.fresnelExponent = 0.80
-        disk.firstMaterial?.reflective.contents = UIColor(white:0.00, alpha:1.0)
-        disk.firstMaterial?.specular.contents = UIColor(white:0.00, alpha:1.0)
-        disk.firstMaterial?.shininess = 0.80
+        disk.firstMaterial?.diffuse.contents = UIColor(red: 234/255, green: 58/255, blue: 186/255, alpha: 1.00)
+//        disk.firstMaterial?.lightingModel = .lambert
+//        disk.firstMaterial?.transparency = 0.80
+//        disk.firstMaterial?.transparencyMode = .dualLayer
+//        disk.firstMaterial?.fresnelExponent = 0.80
+//        disk.firstMaterial?.reflective.contents = UIColor(white:0.00, alpha:1.0)
+//        disk.firstMaterial?.specular.contents = UIColor(white:0.00, alpha:1.0)
+//        disk.firstMaterial?.shininess = 0.80
         return diskNode
     }
     // This is not used currently because could not get the arrow to point exactly away from the phone.
@@ -152,22 +151,65 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         aNode.scale = SCNVector3(0.021, 0.021, 0.021)
         return aNode
     }
-    
+
+    var previousNode: SCNNode?
+
     /// - Tag: RestoreVirtualContent
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-
-
-
-
         guard anchor.name == virtualObjectAnchorName
             else { return }
-        
-        let flatDisk = generateFlatDisk()
+
         DispatchQueue.main.async {
-            node.addChildNode(flatDisk)
+
+            if let previousNode = self.previousNode {
+                let lineNode = self.cylinderLine(from: previousNode.position, to: node.position)
+                self.sceneView.scene.rootNode.addChildNode(lineNode)
+                print("Add content")
+            }
+            self.previousNode = node
         }
     }
-    
+
+    func cylinderLine(from: SCNVector3, to: SCNVector3) -> SCNNode {
+        let x1 = from.x
+        let x2 = to.x
+
+        let y1 = from.y
+        let y2 = to.y
+
+        let z1 = from.z
+        let z2 = to.z
+
+        let distance = sqrtf((x2 - x1) * (x2 - x1) +
+                             (y2 - y1) * (y2 - y1) +
+                             (z2 - z1) * (z2 - z1))
+
+        let cylinder = SCNCapsule(capRadius: 0.05, height: CGFloat(distance))
+
+        cylinder.firstMaterial?.diffuse.contents = UIColor.yellow
+
+        cylinder.firstMaterial?.diffuse.contents = UIColor(red: 234/255, green: 58/255, blue: 186/255, alpha: 1.00)
+        cylinder.firstMaterial?.lightingModel = .lambert
+        cylinder.firstMaterial?.transparencyMode = .dualLayer
+        cylinder.firstMaterial?.fresnelExponent = 0.80
+        cylinder.firstMaterial?.reflective.contents = UIColor(white:0.00, alpha:1.0)
+        cylinder.firstMaterial?.specular.contents = UIColor(white:0.00, alpha:1.0)
+        cylinder.firstMaterial?.shininess = 0.80
+
+        let lineNode = SCNNode(geometry: cylinder)
+        lineNode.position = SCNVector3(((from.x + to.x)/2),
+                                       ((from.y + to.y)/2),
+                                       ((from.z + to.z)/2))
+
+        lineNode.eulerAngles = SCNVector3(Float.pi/2,
+                                          acos((to.z - from.z)/distance),
+                                          atan2(to.y - from.y, to.x - from.x))
+        
+        lineNode.name = "Path"
+
+        return lineNode
+    }
+
     // MARK: - ARSessionDelegate
     
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
@@ -311,7 +353,6 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
                 fatalError("Can't save map: \(error.localizedDescription)")
             }
         }
-        
     }
     
     func loadExperience() {
@@ -387,6 +428,7 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         configuration.environmentTexturing = .automatic
         if #available(iOS 13.0, *), ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth)  {
             configuration.frameSemantics.insert(.personSegmentationWithDepth)
+//            configuration.frameSemantics.insert(.sceneDepth)
         } else {
             print("people occlusion is not supported")
         }
@@ -452,9 +494,8 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
             return
         }
         // Hit test to find a place for a virtual object.
-        guard let hitTestResult = sceneView
-            .hitTest(sender.location(in: sceneView), types: [.existingPlaneUsingGeometry, .estimatedHorizontalPlane])
-            .first
+        guard let query = sceneView.raycastQuery(from: sender.location(in: sceneView), allowing: .existingPlaneInfinite, alignment: .horizontal),
+              let raycastResult = sceneView.session.raycast(query).first
             else { return }
         // 04/10/2021 - no longer doing arrows, rotation is not necessary - changed to disks
         // rotate to be the same direction as the phone and rotate the 3D arrow an additional 90 degrees (- 1.5708 radians)
@@ -463,7 +504,7 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
 //        let rotateTransform = simd_mul(hitTestResult.worldTransform, rotate)
 //        print("scene tap: name is ", virtualObjectAnchorName)
 
-        virtualObjectAnchor = ARAnchor(name: virtualObjectAnchorName, transform: hitTestResult.worldTransform)
+        virtualObjectAnchor = ARAnchor(name: virtualObjectAnchorName, transform: raycastResult.worldTransform)
         sceneView.session.add(anchor: virtualObjectAnchor!)
     }
 
