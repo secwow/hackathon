@@ -2,9 +2,9 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="U8H-4u-SH9">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -414,22 +414,37 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wvR-s1-JPK" userLabel="buttonsContainerView">
                                 <rect key="frame" x="54" y="684" width="267" height="74"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9vM-G1-3bk" userLabel="savePathButton" customClass="RoundedButton" customModule="grid" customModuleProvider="target">
-                                        <rect key="frame" x="86.666666666666657" y="0.0" width="94" height="34"/>
-                                        <color key="backgroundColor" systemColor="systemBlueColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="94" id="EtZ-cz-aUW"/>
-                                            <constraint firstAttribute="height" constant="34" id="ncp-Yl-yUZ"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <inset key="contentEdgeInsets" minX="13" minY="8" maxX="13" maxY="8"/>
-                                        <state key="normal" title="Save">
-                                            <color key="titleColor" red="0.99989157920000005" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="saveExperience:" destination="7dh-A0-qGE" eventType="touchUpInside" id="TGN-lF-RNY"/>
-                                        </connections>
-                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="NnE-DW-uWg">
+                                        <rect key="frame" x="53" y="0.0" width="161" height="34"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9vM-G1-3bk" userLabel="savePathButton" customClass="RoundedButton" customModule="grid" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="94" height="34"/>
+                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="94" id="EtZ-cz-aUW"/>
+                                                    <constraint firstAttribute="height" constant="34" id="ncp-Yl-yUZ"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <inset key="contentEdgeInsets" minX="13" minY="8" maxX="13" maxY="8"/>
+                                                <state key="normal" title="Save">
+                                                    <color key="titleColor" red="0.99989157920000005" green="1" blue="0.99988096950000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="saveExperience:" destination="7dh-A0-qGE" eventType="touchUpInside" id="TGN-lF-RNY"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kCj-Cx-Qs9" customClass="RoundedButton" customModule="grid" customModuleProvider="target">
+                                                <rect key="frame" x="102" y="0.0" width="59" height="34"/>
+                                                <color key="backgroundColor" name="AccentColor"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Undo">
+                                                    <color key="baseForegroundColor" systemColor="systemBackgroundColor"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="onUndoButtonPress:" destination="7dh-A0-qGE" eventType="touchUpInside" id="zlL-Fe-G8N"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="17" translatesAutoresizingMaskIntoConstraints="NO" id="gYd-fr-MZN" userLabel="buttonsLowerRowView">
                                         <rect key="frame" x="0.0" y="42" width="267" height="32"/>
                                         <subviews>
@@ -475,9 +490,7 @@
                                     </stackView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="gYd-fr-MZN" firstAttribute="top" secondItem="9vM-G1-3bk" secondAttribute="bottom" constant="8" id="EQX-JM-TCC"/>
                                     <constraint firstAttribute="height" constant="74" id="TPq-YF-aeF"/>
-                                    <constraint firstItem="9vM-G1-3bk" firstAttribute="centerX" secondItem="wvR-s1-JPK" secondAttribute="centerX" id="l1V-FW-m8I"/>
                                 </constraints>
                             </stackView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nbt-AE-kdv" userLabel="successCheckmark">
@@ -496,7 +509,7 @@
                                 </userDefinedRuntimeAttributes>
                             </imageView>
                             <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="37h-bD-Iyn" userLabel="sessionInfoView">
-                                <rect key="frame" x="95.666666666666686" y="637.66666666666663" width="184" height="36.333333333333371"/>
+                                <rect key="frame" x="95.666666666666686" y="638" width="184" height="36"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="pkc-hu-yuO">
                                     <rect key="frame" x="0.0" y="0.0" width="184" height="36"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1456,6 +1469,9 @@
         <image name="pencil" catalog="system" width="128" height="113"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <image name="trash" catalog="system" width="121" height="128"/>
+        <namedColor name="AccentColor">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

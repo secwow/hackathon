@@ -152,7 +152,7 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         return aNode
     }
 
-    var previousNode: SCNNode?
+    var nodesStack = Stack<(point: SCNNode, line: SCNNode?)>()
 
     /// - Tag: RestoreVirtualContent
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
@@ -160,13 +160,12 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
             else { return }
 
         DispatchQueue.main.async {
-
-            if let previousNode = self.previousNode {
-                let lineNode = self.cylinderLine(from: previousNode.position, to: node.position)
-                self.sceneView.scene.rootNode.addChildNode(lineNode)
-                print("Add content")
+            var lineNode: SCNNode?
+            if let previousNode = self.nodesStack.top?.point {
+                lineNode = self.cylinderLine(from: previousNode.position, to: node.position)
+                self.sceneView.scene.rootNode.addChildNode(lineNode!)
             }
-            self.previousNode = node
+            self.nodesStack.push((point: node, line: lineNode))
         }
     }
 
@@ -304,6 +303,14 @@ class ARPathCreatorViewController: UIViewController, ARSCNViewDelegate, ARSessio
         }
     }()
     
+    @IBAction func onUndoButtonPress(_ sender: UIButton) {
+        if let lastNode = nodesStack.pop() {
+
+            lastNode.point.removeFromParentNode()
+            lastNode.line?.removeFromParentNode()
+        }
+    }
+
     @IBAction func onBackButtonPress(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
